@@ -4,17 +4,14 @@ def solve_aggregate_lp(demand, hire_cost, fire_cost, prod_cost, inv_cost, initia
 
     T = len(demand)
 
-    # Create model
     model = LpProblem("Aggregate_Planning", LpMinimize)
 
-    # Variables
     P = LpVariable.dicts("Production", range(T), lowBound=0)
     I = LpVariable.dicts("Inventory", range(T), lowBound=0)
     W = LpVariable.dicts("Workers", range(T), lowBound=0)
     H = LpVariable.dicts("Hire", range(T), lowBound=0)
     F = LpVariable.dicts("Fire", range(T), lowBound=0)
 
-    # Objective Function
     model += lpSum([
         hire_cost * H[t] +
         fire_cost * F[t] +
@@ -23,29 +20,23 @@ def solve_aggregate_lp(demand, hire_cost, fire_cost, prod_cost, inv_cost, initia
         for t in range(T)
     ])
 
-    # Constraints
-
     for t in range(T):
-
-        # Demand balance
+    
         if t == 0:
             model += P[t] == demand[t] + I[t]
         else:
             model += P[t] + I[t-1] == demand[t] + I[t]
 
-        # Production = workers * productivity
         model += P[t] == prod_per_worker * W[t]
 
-        # Workforce balance
+
         if t == 0:
             model += W[t] == initial_workers + H[t] - F[t]
         else:
             model += W[t] == W[t-1] + H[t] - F[t]
 
-    # Solve
     model.solve()
 
-    # Output
     print("\nStatus:", LpStatus[model.status])
     print("Total Cost =", value(model.objective), "\n")
 
@@ -57,9 +48,6 @@ def solve_aggregate_lp(demand, hire_cost, fire_cost, prod_cost, inv_cost, initia
         print("Hire:", value(H[t]))
         print("Fire:", value(F[t]))
         print()
-
-
-# 🔹 Example run (you can change this later)
 
 if __name__ == "__main__":
     demand = [80000, 50000, 120000, 150000]
