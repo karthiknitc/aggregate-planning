@@ -1,4 +1,4 @@
-Aggregate Planning Solver
+Aggregate Planning Solver.
 This project contains **two optimization tools** developed for solving Aggregate Planning problems using **Linear Programming and Transportation Method**.
 ### 1️. Linear Programming Solver
 ### 2️. Transportation Solver
